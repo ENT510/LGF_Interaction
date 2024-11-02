@@ -1,7 +1,9 @@
 # LGF Interaction System
 
-
 ![Prev](https://i.ibb.co/2kVsk4k/image.png)
+
+The **LGF Interaction System** is a **DUI Handler** designed to facilitate dynamic interactions with various in-game entities, including pedestrians, vehicles, and models. Built on the **DUI (Draw User Interface)** system, it provides a seamless way for players to interact with the game world through a user-friendly interface. This system leverages the power of **NUI (New User Interface)** to display interaction menus, enhancing the overall gameplay experience.
+All registered interactions in the LGF Interaction System return a unique interaction ID. This feature allows server owners and developers to easily manage and reference specific interactions, enabling flexible removal and modification without affecting others.
 
 ## Information
 
@@ -9,9 +11,10 @@
 - [Support](https://discord.gg/wd5PszPA2p)
 - [Showcase](https://discord.gg/wd5PszPA2p)
 
+## Dependency
 
-The **LGF Interaction System** is a **DUI Handler** designed to facilitate dynamic interactions with various in-game entities, including pedestrians, vehicles, and models. Built on the **DUI (Draw User Interface)** system, it provides a seamless way for players to interact with the game world through a user-friendly interface. This system leverages the power of **NUI (New User Interface)** to display interaction menus, enhancing the overall gameplay experience.
-All registered interactions in the LGF Interaction System return a unique interaction ID. This feature allows server owners and developers to easily manage and reference specific interactions, enabling flexible removal and modification without affecting others.
+- LGF_Utility (Optional): Provides access to various framework functions, such as job controls. Without LGF_Utility, the system functions as a standalone implementation, allowing for basic interactions without the extended features provided by the utility.
+- ox_lib
 
 ## Available Interaction Types
 
