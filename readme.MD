@@ -1,6 +1,6 @@
 # LGF Interaction System
 
-[!image]https://i.ibb.co/2kVsk4k/image.png
+![Alt text](https://i.ibb.co/2kVsk4k/image.png)
 
 All registered interactions in the LGF Interaction System return a unique interaction ID. This feature allows server owners and developers to easily manage and reference specific interactions, enabling flexible removal and modification without affecting others.
 
