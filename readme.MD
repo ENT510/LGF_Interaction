@@ -1,12 +1,7 @@
 # LGF Interaction System
 
-<table>
-  <tr>
-    <td><img src="https://i.ibb.co/2kVsk4k/image.png" alt="Image 1" width="600" height="350"></td>
-    <td><img src="https://i.ibb.co/QHdYZ1K/image.png" alt="Image 2" width="600" height="350"></td>
-    <td><img src="https://i.ibb.co/r6GMKbC/image.png" alt="Image 3" width="600" height="350"></td>
-  </tr>
-</table>
+
+![Prev](https://i.ibb.co/2kVsk4k/image.png)
 
 ## Information
 
