@@ -70,7 +70,7 @@ exports.LGF_Interaction:removeInteractionById(interactionID)
   Easily modify interaction options through Lua tables, allowing server owners to tailor the interactions to their specific needs.
 
 - **User-Friendly Interface**:  
-  Integrates with NUI for displaying interaction menus, ensuring that players have an intuitive and visually appealing experience.
+  Integrates with DUI for displaying interaction menus, ensuring that players have an intuitive and visually appealing experience.
 
 - **Job-Based Interactions**:  
   The `createInteractionJob` function allows for the creation of interaction menus that are restricted to certain job roles. This adds a layer of role-playing to the game, as only players with the specified jobs can access these interactions.
