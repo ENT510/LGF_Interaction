@@ -1,14 +1,18 @@
 # LGF Interaction System
 
-| ![Image 1](https://i.ibb.co/2kVsk4k/image.png) | ![Image 2](https://via.placeholder.com/150) | ![Image 3](https://via.placeholder.com/150) |
-|:---:|:---:|:---:|
-
+<table>
+  <tr>
+    <td><img src="https://i.ibb.co/2kVsk4k/image.png" alt="Image 1" width="150" height="150"></td>
+    <td><img src="https://i.ibb.co/QHdYZ1K/image.png" alt="Image 2" width="150" height="150"></td>
+    <td><img src="https://i.ibb.co/r6GMKbC/image.png" alt="Image 3" width="150" height="150"></td>
+  </tr>
+</table>
 
 ## Information
 
-1. [Documentation](https://lgf-docs.vercel.app/interactionSystem/introduction)
-2. [Support](https://discord.gg/wd5PszPA2p)
-3. [Support](https://discord.gg/wd5PszPA2p)
+- [Documentation](https://lgf-docs.vercel.app/interactionSystem/introduction)
+- [Support](https://discord.gg/wd5PszPA2p)
+- [Support](https://discord.gg/wd5PszPA2p)
 
 All registered interactions in the LGF Interaction System return a unique interaction ID. This feature allows server owners and developers to easily manage and reference specific interactions, enabling flexible removal and modification without affecting others.
 
