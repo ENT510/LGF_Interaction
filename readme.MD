@@ -13,8 +13,7 @@ All registered interactions in the LGF Interaction System return a unique intera
 
 ## Dependency
 
-- **LGF_Utility** (Optional): Provides access to various framework functions, such as job controls. Without LGF_Utility, the system functions as a standalone implementation, allowing for basic interactions without the extended features provided by the utility.
-
+- **LGF_Utility** (Optional): Provides access to various framework functions, such as job controls. Without LGF_Utility, the system functions as a standalone implementation.
 - **ox_lib**
 
 ## Available Interaction Types
