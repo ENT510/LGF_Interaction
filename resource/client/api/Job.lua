@@ -55,10 +55,6 @@ function Dui.createInteractionJob(data)
         return
     end
 
-    
-
-
-
     Dui.CreateInteraction({
         Coords = data.Coords,
         Visible = true,
