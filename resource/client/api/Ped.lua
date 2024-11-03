@@ -28,3 +28,29 @@ end
 exports('createInteractionPed', function(data)
     return Dui.createInteractionPed(data)
 end)
+
+exports.LGF_Interaction:createInteractionPed({
+    Entity = PlayerPedId(),
+    IndexBone = 31086,
+    DataBind = {
+        {
+            index = 1,
+            title = "Option 1",
+            icon = "icon1",
+            description = "Description for Option 1",
+            RequestedItem = { ItemName = "water", ItemCount = 3, },
+            onClick = function(index, entity)
+                print("You selected Option 1!")
+            end
+        },
+        {
+            index = 2,
+            title = "Option 2",
+            icon = "icon2",
+            description = "Description for Option 2",
+            onClick = function(index, entity)
+                print("You selected Option 2!")
+            end
+        }
+    }
+})

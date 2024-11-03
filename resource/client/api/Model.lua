@@ -6,7 +6,6 @@ local activeInteractions = {}
 --- @param data.Distance number -- Distance within which interactions are available (default is 4.0)
 --- @param data.OffsetCoords vec3 -- Offset coordinates for interaction positioning
 function Dui.createInteractionGlobalModel(data)
-
     if not data.DataBind or not data.Model then
         Shared.debugData("WARNING", "createInteractionGlobalModel: No DataBind or Model provided.")
         return
@@ -15,13 +14,11 @@ function Dui.createInteractionGlobalModel(data)
     local interactionDistance = data.Distance or 4.0
     local offsetCoords = data.OffsetCoords or vec3(0, 0, 0)
 
-
     CreateThread(function()
         while true do
             Wait(2000)
 
             local playerCoords = GetEntityCoords(GetPlayerPed(PlayerId()))
-
             local allModels = GetAllModels(data.Model)
             local currentInteractions = {}
 
@@ -50,13 +47,13 @@ function Dui.createInteractionGlobalModel(data)
                                 description = item.description,
                                 image = item.image,
                                 buttonColor = item.buttonColor,
+                                RequestedItem = item.RequestedItem,
                                 onClick = function(index)
-                                    item.onClick(index, modelID, modelInfo.coords)
+                                    item.onClick(index, modelInfo.entity, modelInfo.coords)
                                 end
                             }
                             table.insert(modelSpecificDataBind, clonedItem)
                         end
-
 
                         local interaction = Dui.CreateInteraction({
                             Coords = interactionCoords,
@@ -109,24 +106,3 @@ exports('createInteractionGlobalModel', function(data)
     return Dui.createInteractionGlobalModel(data)
 end)
 
-exports.LGF_Interaction:createInteractionGlobalModel({
-    Distance = 2.0,
-    OffsetCoords = vec3(0, 0, 2.5),
-    Model = {
-        [GetHashKey("prop_atm_03")] = true,
-        [GetHashKey("prop_fleeca_atm")] = true,
-        [GetHashKey("prop_atm_01")] = true,
-        [GetHashKey("prop_atm_02")] = true,
-    },
-    DataBind = {
-        {
-            index = 1,
-            title = "Open Atm",
-            icon = "credit-card",
-            description = "Access banking services at this ATM.",
-            onClick = function(index, model, coords)
-                exports.LGF_Banking:openBank()
-            end
-        }
-    }
-})

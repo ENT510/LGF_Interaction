@@ -31,7 +31,6 @@ function loadDui()
     end
 end
 
-
 function Dui.drawSprite(coords, dictName, txtName)
     SetDrawOrigin(coords.x, coords.y, coords.z + 1)
     DrawInteractiveSprite(dictName, txtName, 0, 0, 1, 1, 0.0, 255, 255, 255, 255)
@@ -51,7 +50,7 @@ RegisterNetEvent('onResourceStart', function(resourceName)
     loadDui()
 end)
 
----@param data table 
+---@param data table
 function Dui.CreateInteraction(data)
     -- if type(data) ~= "table" or not data.Coords or not data.DataBind then
     --     Shared.printTypeError("table with 'Coords' and 'DataBind'", type(data), "Dui.CreateInteraction")
@@ -61,13 +60,13 @@ function Dui.CreateInteraction(data)
     if data.Visible and LocalPlayer.state.interactionOpened then return end
 
     loadDui()
-
     LocalPlayer.state.interactionOpened = data.Visible
     BindCached = data.DataBind
     CurrentItem = 1
 
     Citizen.SetTimeout(500, function()
         local sanitizedDataBind = {}
+
         for _, item in ipairs(data.DataBind) do
             local clonedItem = {
                 index = item.index,
@@ -76,7 +75,8 @@ function Dui.CreateInteraction(data)
                 description = item.description,
                 image = item.image,
                 buttonColor = item.buttonColor,
-                entity = item.entity
+                entity = item.entity,
+                requstedItem = item.RequestedItem,
             }
             table.insert(sanitizedDataBind, clonedItem)
         end
@@ -111,10 +111,33 @@ function Dui.CreateInteraction(data)
                             }
                         })
                     elseif IsControlJustPressed(0, 191) then
-                        if BindCached[CurrentItem] and BindCached[CurrentItem].onClick then
-                            BindCached[CurrentItem].onClick(CurrentItem, BindCached[CurrentItem].entity)
+                        local selectedItem = BindCached[CurrentItem]
+
+                        if selectedItem.RequestedItem then
+                            local itemName = selectedItem.RequestedItem.ItemName
+                            local itemCount = selectedItem.RequestedItem.ItemCount or 1
+
+
+                            local playerItemCount = lib.callback.await("LGF_Interaction.getItemCount", false, itemName, itemCount)
+
+                            if type(playerItemCount) == "number" then
+                                if playerItemCount >= itemCount then
+                                    if selectedItem.onClick then
+                                        Shared.debugData("INFO",("Requirement met for %s (%d items). Triggering action."):format(itemName, playerItemCount))
+                                        selectedItem.onClick(CurrentItem, selectedItem.entity)
+                                    end
+                                else
+                                    Shared.debugData("WARNING",("You need at least %d of %s to perform this action."):format(itemCount, itemName))
+                                end
+                            end
+                        else
+                            if selectedItem.onClick then
+                                print(("No item requirement specified. Triggering action for %s."):format(selectedItem.title))
+                                selectedItem.onClick(CurrentItem, selectedItem.entity)
+                            end
                         end
                     end
+
                     Dui.drawSprite(data.Coords, DuiObject?.dictName, DuiObject?.txtName)
                 end
             end)
@@ -123,14 +146,9 @@ function Dui.CreateInteraction(data)
 
     local randomID = nil
 
-    if hasUtility then
-        randomID = LGF.string:RandStr(6, 'upp')
-    else
-        randomID = math.random(100000, 999999)
-    end
+    if hasUtility then randomID = LGF.string:RandStr(6, 'upp') else randomID = math.random(100000, 999999) end
 
     local interactionID = ("%s_%d_%s"):format(GetCurrentResourceName(), interactionCounter, randomID)
-
     interactionCounter = interactionCounter + 1
     activeInteractions[interactionID] = data
 
