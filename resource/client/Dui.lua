@@ -53,10 +53,10 @@ end)
 
 ---@param data table 
 function Dui.CreateInteraction(data)
-    if type(data) ~= "table" or not data.Coords or not data.DataBind then
-        Shared.printTypeError("table with 'Coords' and 'DataBind'", type(data), "Dui.CreateInteraction")
-        return
-    end
+    -- if type(data) ~= "table" or not data.Coords or not data.DataBind then
+    --     Shared.printTypeError("table with 'Coords' and 'DataBind'", type(data), "Dui.CreateInteraction")
+    --     return
+    -- end
 
     if data.Visible and LocalPlayer.state.interactionOpened then return end
 

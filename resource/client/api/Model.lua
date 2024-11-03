@@ -18,7 +18,7 @@ function Dui.createInteractionGlobalModel(data)
 
     CreateThread(function()
         while true do
-            Wait(1000)
+            Wait(2000)
 
             local playerCoords = GetEntityCoords(GetPlayerPed(PlayerId()))
 

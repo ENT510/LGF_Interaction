@@ -1,6 +1,6 @@
 Job = {}
 
-if not LGF then return end
+if not LGF then print("Switch Mode Standalone. Download LGF_Utility to benefit from export (createInteractionJob)") return end
 
 function Job.hasRequiredJob(playerJob, requiredJobs)
     if type(requiredJobs) == "table" then
@@ -54,6 +54,10 @@ function Dui.createInteractionJob(data)
         Shared.debugData("WARNING", "You do not have permission to create this interaction due to grade requirements.")
         return
     end
+
+    
+
+
 
     Dui.CreateInteraction({
         Coords = data.Coords,
