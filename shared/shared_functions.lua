@@ -6,7 +6,7 @@ function Shared.getConvarBool(convarName, defaultValue)
 end
 
 function Shared.debugData(type, ...)
-    if not Shared.getConvarBool("LGF_Interaction.enableDebug", true) then return end
+    if not Shared.getConvarBool("LGF_Interaction.enableDebug", false) then return end
 
     local args = { ... }
     local debugMessage = ""
