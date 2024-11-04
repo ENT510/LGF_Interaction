@@ -34,11 +34,10 @@ function Dui.createInteractionGlobalModel(data)
                     local distanceToModel = Vdist(playerCoords.x, playerCoords.y, playerCoords.z, modelCoords.x, modelCoords.y, modelCoords.z)
 
                     if distanceToModel <= interactionDistance then
-                        local entityHeight = GetEntityHeight(modelInfo.entity) or 1.0
                         local interactionCoords = vec3(
                             modelCoords.x + offsetCoords.x,
                             modelCoords.y + offsetCoords.y,
-                            modelCoords.z + entityHeight + offsetCoords.z
+                            modelCoords.z + offsetCoords.z
                         )
 
                         local interactionKey = ("%s_%s"):format(tostring(modelID), tostring(modelCoords))
