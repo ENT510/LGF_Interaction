@@ -1,6 +1,6 @@
 Job = {}
 
-if not LGF then print("Switch Mode Standalone. Download LGF_Utility to benefit from export (createInteractionJob)") return end
+if not LGF then  return end
 
 function Job.hasRequiredJob(playerJob, requiredJobs)
     if type(requiredJobs) == "table" then

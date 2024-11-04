@@ -6,78 +6,93 @@ local activeInteractions = {}
 --- @param data.Distance number -- Distance within which interactions are available (default is 4.0)
 --- @param data.OffsetCoords vec3 -- Offset coordinates for interaction positioning
 function Dui.createInteractionGlobalModel(data)
+    print(json.encode(data, { indent = true }))
+
     if not data.DataBind or not data.Model then
         Shared.debugData("WARNING", "createInteractionGlobalModel: No DataBind or Model provided.")
-        return
+        return nil
     end
+
+    Dui.clearAllInteractionsModel()
 
     local interactionDistance = data.Distance or 4.0
     local offsetCoords = data.OffsetCoords or vec3(0, 0, 0)
 
-    CreateThread(function()
-        while true do
-            Wait(2000)
+    local lastCreatedInteractionID = nil
+    SetTimeout(100, function()
+        CreateThread(function()
+            while true do
+                Wait(2000)
 
-            local playerCoords = GetEntityCoords(GetPlayerPed(PlayerId()))
-            local allModels = GetAllModels(data.Model)
-            local currentInteractions = {}
+                local playerCoords = GetEntityCoords(GetPlayerPed(PlayerId()))
+                local allModels = GetAllModels(data.Model)
+                local currentInteractions = {}
 
-            for _, modelInfo in pairs(allModels) do
-                local modelID = modelInfo.model
-                local modelCoords = modelInfo.coords
-                local distanceToModel = Vdist(playerCoords.x, playerCoords.y, playerCoords.z, modelCoords.x, modelCoords.y, modelCoords.z)
+                for _, modelInfo in pairs(allModels) do
+                    local modelID = modelInfo.model
+                    local modelCoords = modelInfo.coords
+                    local distanceToModel = Vdist(playerCoords.x, playerCoords.y, playerCoords.z, modelCoords.x, modelCoords.y, modelCoords.z)
 
-                if distanceToModel <= interactionDistance then
-                    local entityHeight = GetEntityHeight(modelInfo.entity) or 1.0
-                    local interactionCoords = vec3(
-                        modelCoords.x + offsetCoords.x,
-                        modelCoords.y + offsetCoords.y,
-                        modelCoords.z + entityHeight + offsetCoords.z
-                    )
+                    if distanceToModel <= interactionDistance then
+                        local entityHeight = GetEntityHeight(modelInfo.entity) or 1.0
+                        local interactionCoords = vec3(
+                            modelCoords.x + offsetCoords.x,
+                            modelCoords.y + offsetCoords.y,
+                            modelCoords.z + entityHeight + offsetCoords.z
+                        )
 
-                    local interactionKey = ("%s_%s"):format(tostring(modelID), tostring(modelCoords))
+                        local interactionKey = ("%s_%s"):format(tostring(modelID), tostring(modelCoords))
 
-                    if not activeInteractions[interactionKey] then
-                        local modelSpecificDataBind = {}
-                        for _, item in ipairs(data.DataBind) do
-                            local clonedItem = {
-                                index = item.index,
-                                title = item.title,
-                                icon = item.icon,
-                                description = item.description,
-                                image = item.image,
-                                buttonColor = item.buttonColor,
-                                RequestedItem = item.RequestedItem,
-                                onClick = function(index)
-                                    item.onClick(index, modelInfo.entity, modelInfo.coords)
-                                end
-                            }
-                            table.insert(modelSpecificDataBind, clonedItem)
+                        local model = modelInfo.entity or nil
+                        if not activeInteractions[interactionKey] then
+                            local modelSpecificDataBind = {}
+                            for _, item in ipairs(data.DataBind) do
+                                local clonedItem = {
+                                    index = item.index,
+                                    title = item.title,
+                                    icon = item.icon,
+                                    description = item.description,
+                                    image = item.image,
+                                    buttonColor = item.buttonColor,
+                                    RequestedItem = item.RequestedItem,
+                                    onClick = function(index)
+                                        item.onClick(index, model, modelInfo.coords)
+                                    end
+                                }
+                                table.insert(modelSpecificDataBind, clonedItem)
+                            end
+
+                            local interaction = Dui.CreateInteraction({
+                                Coords = interactionCoords,
+                                Visible = true,
+                                DataBind = modelSpecificDataBind
+                            })
+
+                            if interaction then
+                                lastCreatedInteractionID = interaction
+                            end
+
+                            Shared.debugData("INFO", ("Created interaction for model ID %s within distance %.2f"):format(modelID, distanceToModel))
+                            activeInteractions[interactionKey] = interaction
                         end
 
-                        local interaction = Dui.CreateInteraction({
-                            Coords = interactionCoords,
-                            Visible = true,
-                            DataBind = modelSpecificDataBind
-                        })
-
-                        Shared.debugData("INFO", ("Created interaction for model ID %s within distance %.2f"):format(modelID, distanceToModel))
-                        activeInteractions[interactionKey] = interaction
+                        currentInteractions[interactionKey] = true
                     end
+                end
 
-                    currentInteractions[interactionKey] = true
+
+                for interactionKey, interaction in pairs(activeInteractions) do
+                    if not currentInteractions[interactionKey] then
+                        Dui.removeInteractionById(interaction)
+                        Shared.debugData("DEBUG", ("Closed inactive interaction for key: %s"):format(interactionKey))
+                        activeInteractions[interactionKey] = nil
+                    end
                 end
             end
-
-            for interactionKey, interaction in pairs(activeInteractions) do
-                if not currentInteractions[interactionKey] then
-                    Dui.removeInteractionById(interaction)
-                    Shared.debugData("DEBUG", ("Closed inactive interaction for key: %s"):format(interactionKey))
-                    activeInteractions[interactionKey] = nil
-                end
-            end
-        end
+        end)
     end)
+
+    return lastCreatedInteractionID
 end
 
 --- @param modelToCheck table -- A table of model identifiers to check against
@@ -103,6 +118,19 @@ function GetAllModels(modelToCheck)
 end
 
 exports('createInteractionGlobalModel', function(data)
-    return Dui.createInteractionGlobalModel(data)
+    local interactionID = Dui.createInteractionGlobalModel(data)
+    return interactionID
 end)
 
+
+function Dui.clearAllInteractionsModel()
+    for interactionKey, interaction in pairs(activeInteractions) do
+        Dui.removeInteractionById(interaction)
+        Shared.debugData("DEBUG", ("Cleared interaction for key: %s"):format(interactionKey))
+    end
+    activeInteractions = {}
+end
+
+exports('clearAllInteractionsModel', function()
+    Dui.clearAllInteractionsModel()
+end)

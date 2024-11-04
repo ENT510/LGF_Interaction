@@ -8,19 +8,19 @@ local GetResourceState              = GetResourceState
 
 Dui                                 = {}
 LocalPlayer.state.interactionOpened = false
-CurrentItem                         = 1
-DuiObject                           = nil
 _DEBUG                              = false
 
 local screenWidth, screenHeight     = GetActiveScreenResolution()
 local activeInteractions            = {}
 local interactionCounter            = 0
+local DuiObject                     = nil
+local CurrentItem                   = 1
 local hasUtility                    = GetResourceState("LGF_Utility"):find("start") and true or false
 local Url                           = ("nui://%s/web/build/index.html"):format(GetCurrentResourceName())
 
 
 
-function loadDui()
+function Dui.loadDui()
     if not DuiObject then
         DuiObject = lib.dui:new({
             url = Url,
@@ -37,17 +37,25 @@ function Dui.drawSprite(coords, dictName, txtName)
     ClearDrawOrigin()
 end
 
-AddEventHandler('onResourceStop', function(resourceName)
-    if resourceName ~= GetCurrentResourceName() then return end
+function Dui.clearDui()
     if DuiObject then
-        DuiObject:remove()
+        if DuiObject.remove then
+            DuiObject:remove()
+        else
+            print("Warning: DuiObject does not have a 'remove' method.")
+        end
         DuiObject = nil
     end
+end
+
+AddEventHandler('onResourceStop', function(resourceName)
+    if resourceName ~= GetCurrentResourceName() then return end
+    Dui.clearDui()
 end)
 
 RegisterNetEvent('onResourceStart', function(resourceName)
     if resourceName ~= GetCurrentResourceName() then return end
-    loadDui()
+    Dui.loadDui()
 end)
 
 ---@param data table
@@ -59,7 +67,7 @@ function Dui.CreateInteraction(data)
 
     if data.Visible and LocalPlayer.state.interactionOpened then return end
 
-    loadDui()
+    Dui.loadDui()
     LocalPlayer.state.interactionOpened = data.Visible
     BindCached = data.DataBind
     CurrentItem = 1
@@ -117,23 +125,23 @@ function Dui.CreateInteraction(data)
                             local itemName = selectedItem.RequestedItem.ItemName
                             local itemCount = selectedItem.RequestedItem.ItemCount or 1
 
-
                             local playerItemCount = lib.callback.await("LGF_Interaction.getItemCount", false, itemName, itemCount)
 
                             if type(playerItemCount) == "number" then
                                 if playerItemCount >= itemCount then
                                     if selectedItem.onClick then
-                                        Shared.debugData("INFO",("Requirement met for %s (%d items). Triggering action."):format(itemName, playerItemCount))
-                                        selectedItem.onClick(CurrentItem, selectedItem.entity)
+                                        Shared.debugData("INFO", ("Requirement met for %s (%d items). Triggering action."):format(itemName, playerItemCount))
+                                        selectedItem.onClick(CurrentItem, selectedItem.entity, data.Coords)
                                     end
                                 else
-                                    Shared.debugData("WARNING",("You need at least %d of %s to perform this action."):format(itemCount, itemName))
+                                    Shared.debugData("WARNING", ("You need at least %d of %s to perform this action."):format(itemCount, itemName))
                                 end
                             end
                         else
                             if selectedItem.onClick then
-                                print(("No item requirement specified. Triggering action for %s."):format(selectedItem.title))
-                                selectedItem.onClick(CurrentItem, selectedItem.entity)
+                                Shared.debugData("INFO", ("No item requirement specified. Triggering action for %s."):format(selectedItem.title))
+
+                                selectedItem.onClick(CurrentItem, data.Coords)
                             end
                         end
                     end
@@ -157,9 +165,16 @@ end
 
 function Dui.CloseInteraction()
     local State = false
-    Dui.CreateInteraction({ Visible = State, DataBind = {} })
+
     LocalPlayer.state.interactionOpened = State
     CurrentItem = 1
+    DuiObject:sendMessage({
+        action = "openInteraction",
+        data = {
+            Visible = false,
+            DataBind = {}
+        }
+    })
 end
 
 ---@param data table -- Data used to create the interaction
@@ -178,13 +193,18 @@ end)
 ---@param interactionID string -- The ID of the interaction to remove
 function Dui.removeInteractionById(interactionID)
     if activeInteractions[interactionID] then
-        Dui.CreateInteraction({
-            Visible = false,
-            DataBind = {}
-        })
-        activeInteractions[interactionID] = nil
+        local success, err = pcall(function()
+            Dui.CloseInteraction()
+        end)
+
+        if not success then
+            Shared.debugData("ERROR", ("during CloseInteraction: %s"):format(err))
+        else
+            activeInteractions[interactionID] = nil
+            Shared.debugData("INFO", ("Interaction with ID: %s removed successfully."):format(interactionID))
+        end
     else
-        print(("No interaction found for ID: %s"):format(interactionID))
+        warn(("No interaction found for ID: %s"):format(interactionID))
     end
 end
 

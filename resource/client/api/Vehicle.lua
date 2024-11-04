@@ -16,6 +16,9 @@ function Dui.createInteractionVehicle(data)
     local boneCoords = GetWorldPositionOfEntityBone(data.Entity, boneIndex)
     local finalCoords = boneCoords + offset
 
+    if data.OffsetCoords then
+        finalCoords = finalCoords + data.OffsetCoords
+    end
 
     for _, item in ipairs(data.DataBind) do
         item.entity = data.Entity
@@ -29,5 +32,6 @@ function Dui.createInteractionVehicle(data)
 end
 
 exports('createInteractionVehicle', function(data)
-    return Dui.createInteractionVehicle(data)
+    local InteractionID = Dui.createInteractionVehicle(data)
+    return InteractionID
 end)
