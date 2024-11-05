@@ -35,10 +35,7 @@ function Dui.createInteractionJob(data)
     local requiredGrade = data.RequiredGrade or 0
 
 
-    if not PlayerJob then
-        warn("Missing Params Job. Use Another Functions")
-        return
-    end
+    if not PlayerJob then return end
 
     Shared.debugData("DEBUG", ("Player Job: %s  Required Jobs: %s"):format(PlayerJob, requiredJobs))
 
@@ -54,10 +51,6 @@ function Dui.createInteractionJob(data)
         Shared.debugData("WARNING", "You do not have permission to create this interaction due to grade requirements.")
         return
     end
-
-    
-
-
 
     Dui.CreateInteraction({
         Coords = data.Coords,
