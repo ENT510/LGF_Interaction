@@ -13,7 +13,7 @@ All registered interactions in the LGF Interaction System return a unique intera
 
 - [Documentation](https://lgf-docs.vercel.app/interactionSystem/introduction)
 - [Support](https://discord.gg/wd5PszPA2p)
-- [Showcase](https://discord.gg/wd5PszPA2p)
+- [Showcase](https://www.youtube.com/watch?v=8h4Tzx72FB4)
 
 ## Dependency
 
