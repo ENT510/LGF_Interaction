@@ -55,7 +55,7 @@ exports.LGF_Interaction:createInteractionGlobalModel(data)
    Closes any open interaction menus, ensuring a smooth transition back to normal gameplay.
 
 ```lua copy
-exports.LGF_Interaction:closeInteraction(data)
+exports.LGF_Interaction:closeInteraction()
 ```
 
 6. **Remove Interaction by ID:**:
