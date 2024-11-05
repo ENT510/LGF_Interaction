@@ -1,5 +1,9 @@
 # LGF Interaction System
 
+![GitHub Downloads](https://img.shields.io/github/downloads/ENT510/LGF_Interaction/total?logo=github)
+![GitHub Release](https://img.shields.io/github/v/release/ENT510/LGF_Interaction?logo=github)
+
+
 ![Prev](https://i.ibb.co/2kVsk4k/image.png)
 
 The **LGF Interaction System** is a **DUI Handler** designed to facilitate dynamic interactions with various in-game entities, including pedestrians, vehicles, and models. Built on the **DUI (Draw User Interface)** system, it provides a seamless way for players to interact with the game world through a user-friendly interface. This system leverages the power of **NUI (New User Interface)** to display interaction menus, enhancing the overall gameplay experience.
