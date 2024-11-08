@@ -1,3 +1,7 @@
+![GitHub Downloads](https://img.shields.io/github/downloads/ENT510/LGF_Interaction/total?logo=github)
+![GitHub Release](https://img.shields.io/github/v/release/ENT510/LGF_Interaction?logo=github)
+
+
 # LGF Interaction System
 
 ![Prev](https://i.ibb.co/2kVsk4k/image.png)
