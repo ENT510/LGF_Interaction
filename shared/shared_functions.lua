@@ -1,27 +1,39 @@
 Shared = {}
+local colors = { DEBUG = "^5", WARNING = "^3", INFO = "^4", ERROR = "^1", DEFAULT = "^0" }
 
 function Shared.getConvarBool(convarName, defaultValue)
     local value = GetConvar(convarName, tostring(defaultValue))
     return value == "true"
 end
 
-function Shared.debugData(type, ...)
-    if not Shared.getConvarBool("LGF_Interaction.enableDebug", false) then return end
+function Shared.formatValue(args)
+    if type(args) == 'function' then
+        return "Function: " .. msgpack.unpack(msgpack.pack(tostring(args)))
+    elseif type(args) == 'table' then
+        return json.encode(args, { sort_keys = true, indent = true })
+    else
+        return tostring(args)
+    end
+end
+
+function Shared.debugData(level, ...)
+    if not Shared.getConvarBool("LGF_Interaction.enableDebug", true) then return end
 
     local args = { ... }
-    local debugMessage = ""
-    local colors = { DEBUG = "^5", WARNING = "^3", INFO = "^4", ERROR = "^1", DEFAULT = "^0" }
 
-    local color = colors[type] or colors.DEFAULT
-    debugMessage = color .. "[" .. type .. "]" .. colors.DEFAULT .. " "
+    for i = 1, #args do args[i] = Shared.formatValue(args[i]) end
 
-    local formattedArgs = {}
-    for _, v in ipairs(args) do
-        table.insert(formattedArgs, tostring(v))
-    end
+    local colorPrefixes = {
+        ["DEBUG"] = colors.DEBUG .. "[DEBUG] " .. colors.DEFAULT,
+        ["WARNING"] = colors.WARNING .. "[WARNING] " .. colors.DEFAULT,
+        ["INFO"] = colors.INFO .. "[INFO] " .. colors.DEFAULT,
+        ["ERROR"] = colors.ERROR .. "[ERROR] " .. colors.DEFAULT
+    }
 
-    debugMessage = debugMessage .. table.concat(formattedArgs, ", ")
-    print(debugMessage)
+    local colorPrefix = colorPrefixes[level] or colors.DEFAULT .. "[LOG] " .. colors.DEFAULT
+    local finalMessage = colorPrefix .. table.concat(args, " | ")
+
+    print(finalMessage)
 end
 
 function Shared.printTypeError(expectedType, actualType, variableName)
