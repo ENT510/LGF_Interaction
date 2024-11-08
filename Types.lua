@@ -28,3 +28,5 @@ InteractionData = {}
 ---@field onClick fun(self: InteractionData): void -- Action to perform when the interaction item is clicked.
 ---@field canInteract fun(distance: number, interactionid: string, myPed: number): boolean -- Condition to check if interaction with this item can happen.
 InteractionItemData = {}
+
+---@endmeta
