@@ -29,8 +29,6 @@ local function randomID()
     return tostring(math.random(100000, 999999))
 end
 
-
-
 return {
     randomID = randomID,
 }

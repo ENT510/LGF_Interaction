@@ -1,4 +1,4 @@
-local Dui = lib.load("resource.client.interact.Dui")
+-- local Dui = lib.load("resource.client.interact.Dui")
 local pedArray = {}
 
 local function createPed(position, model, pedID)
@@ -51,12 +51,12 @@ local function addInteractionPed(data)
     local ped = createPed(data.Coords, data.model, data.pedID)
     local coords = vec4(data.Coords.x, data.Coords.y, data.Coords.z + 1, data.Coords.w)
 
-
     local distance = data.distance or 10
     local closest = data.closest or 5.0
     local visible = true
     local debug = data.debug or false
     local debugColour = data.debugColour or { r = 128, g = 0, b = 128, a = 100 }
+
 
     local interactionID = Dui.createInteraction({
         distance = distance,
@@ -89,9 +89,9 @@ local function addInteractionPed(data)
         end,
 
         nearby = function(self) if data.nearby then data.nearby(self) end end,
-    })
+    }, GetInvokingResource())
 
-
+    pedArray[data.pedID] = pedArray[data.pedID] or {}
     pedArray[data.pedID].interactionID = interactionID
 
     return interactionID
@@ -101,14 +101,6 @@ local function getAllInteractionPeds()
     return pedArray
 end
 
-AddEventHandler('onResourceStop', function(resourceName)
-    if resourceName == GetCurrentResourceName() then
-        for pedID, pedData in pairs(pedArray) do
-            removeInteractionPed(pedID)
-        end
-        pedArray = {}
-    end
-end)
 
 exports('addInteractionPed', addInteractionPed)
 exports('removeInteractionPed', removeInteractionPed)
@@ -116,5 +108,3 @@ exports('removePed', removePed)
 exports('getInteractionPeds', getAllInteractionPeds)
 
 return addInteractionPed
-
-

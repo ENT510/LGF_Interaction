@@ -5,7 +5,7 @@ lua54 'yes'
 
 name 'LGF_Interaction'
 author 'ENT510'
-version '1.0.1'
+version '1.0.2'
 description 'LGF Interaction System: A robust interaction system leveraging the Mantine UI library for a seamless user interface experience.'
 
 
