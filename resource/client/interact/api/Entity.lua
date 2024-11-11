@@ -100,4 +100,5 @@ exports('addInteractionEntity', addInteractionEntity)
 exports('removeInteractionEntity', removeInteractionEntity)
 exports('getInteractionEntities', getAllInteractionEntities)
 
+
 return addInteractionEntity

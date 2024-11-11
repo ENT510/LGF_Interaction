@@ -94,3 +94,47 @@
 -- end)
 
 
+-- local InteractionZones = {
+--     { Position = vec4(27.1431, -1873.0547, 23.0060, 28.5102), Description = "Enter the shop" },
+--     { Position = vec4(200.3, 350.7, 32.4, 180.0),             Description = "Speak to the NPC" }
+-- }
+
+
+-- local InteractionIDs = {} 
+
+-- for i = 1, #InteractionZones do
+--     local zone = InteractionZones[i]
+
+--     local interaction = exports.LGF_Interaction:addInteraction({
+--         Coords = zone.Position,
+--         DataBind = {
+--             {
+--                 index = 1,
+--                 title = "Interact with the zone",
+--                 icon = "fas fa-vault",
+--                 description = zone.Description,
+--                 onClick = function(self)
+--                     print(("Interaction with zone: %s"):format(self.id))
+--                 end,
+--                 canInteract = function(distance, interactionID, myPed)
+--                     return true
+--                 end
+--             }
+--         },
+--         distance = 10,
+--         closest = 5.0, 
+--         debug = true,
+--         onEnter = function(self)
+--             print(("self Data %s"):format(msgpack.unpack(msgpack.pack(json.encode(self, { indent = true })))))
+--         end,
+--         onExit = function(self)
+--         end,
+--         nearby = function(self)
+--         end
+--     })
+
+
+--     table.insert(InteractionIDs, interaction)
+-- end
+
+

@@ -115,4 +115,5 @@ exports('addInteractionVehicle', addInteractionVehicle)
 exports('removeInteractionVehicle', removeInteractionVehicle)
 exports('getInteractionVehicles', getAllInteractionVehicles)
 
+
 return addInteractionVehicle
