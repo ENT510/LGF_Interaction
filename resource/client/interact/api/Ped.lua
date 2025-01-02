@@ -1,7 +1,7 @@
 -- local Dui = lib.load("resource.client.interact.Dui")
 local pedArray = {}
 
-local function createPed(position, model, pedID)
+local function createPed(position, model, pedID, resourceOwner)
     if pedArray[pedID] and pedArray[pedID].ped then return pedArray[pedID].ped end
     local modelLoaded = lib.requestModel(model)
     if not modelLoaded then return nil end
@@ -15,7 +15,7 @@ local function createPed(position, model, pedID)
     SetPedFleeAttributes(ped, 0, false)
     SetPedCanUseAutoConversationLookat(ped, false)
     ClearPedTasksImmediately(ped)
-    pedArray[pedID] = { ped = ped, position = position, model = model }
+    pedArray[pedID] = { ped = ped, position = position, model = model, resourceOwner = resourceOwner }
     return ped
 end
 
@@ -42,21 +42,22 @@ local function removePed(pedID)
     end
 end
 
-local function addInteractionPed(data)
+local createdPeds = {}
+
+local function addInteractionPed(data)    
     assert(data and data.Coords, "addInteractionPed: Missing position in data.")
     assert(data and data.model, "addInteractionPed: Missing model in data.")
     assert(data and data.pedID, "addInteractionPed: Missing pedID in data.")
     assert(data and data.dataBind, "addInteractionPed: Missing dataBind in data.")
 
-    local ped = createPed(data.Coords, data.model, data.pedID)
+    local invokingResource = GetInvokingResource()
+    local ped = createPed(data.Coords, data.model, data.pedID, invokingResource)
     local coords = vec4(data.Coords.x, data.Coords.y, data.Coords.z + 1, data.Coords.w)
-
     local distance = data.distance or 10
     local closest = data.closest or 5.0
     local visible = true
     local debug = data.debug or false
     local debugColour = data.debugColour or { r = 128, g = 0, b = 128, a = 100 }
-
 
     local interactionID = Dui.createInteraction({
         distance = distance,
@@ -89,7 +90,7 @@ local function addInteractionPed(data)
         end,
 
         nearby = function(self) if data.nearby then data.nearby(self) end end,
-    }, GetInvokingResource())
+    }, invokingResource)
 
     pedArray[data.pedID] = pedArray[data.pedID] or {}
     pedArray[data.pedID].interactionID = interactionID
@@ -101,6 +102,27 @@ local function getAllInteractionPeds()
     return pedArray
 end
 
+AddEventHandler("onResourceStop", function(resourceName)
+    local resourcePeds = {}
+
+    for pedId, pedData in pairs(pedArray) do
+        if not pedData.resourceOwner then goto continue end
+
+        if resourceName == pedData.resourceOwner then
+            resourcePeds[#resourcePeds+1] = pedId
+        end
+
+        ::continue::
+    end
+
+    if(#resourcePeds == 0) then
+        return
+    end
+
+    for pedIndex, pedId in pairs(resourcePeds) do
+        removePed(pedId)
+    end
+end)
 
 exports('addInteractionPed', addInteractionPed)
 exports('removeInteractionPed', removeInteractionPed)
