@@ -16,7 +16,6 @@ local function addInteractionEntity(data)
 
     local entity = NetworkGetEntityFromNetworkId(data.netID)
 
-    -- Wait until the entity exists in is Networked for the machine
     repeat Wait(100) until NetworkDoesEntityExistWithNetworkId(data.netID)
 
     if not DoesEntityExist(entity) then
@@ -26,25 +25,11 @@ local function addInteractionEntity(data)
 
     local coords = GetEntityCoords(entity)
 
-    -- Adjust coordinates if a bone is specified
+
     if data.entityBone then
         local boneCoords = getEntityBoneCoords(entity, data.entityBone)
-        if boneCoords then
-            coords = boneCoords
-        else
-            coords = vector3(coords.x, coords.y, coords.z + 1.0)
-        end
+        if boneCoords then coords = boneCoords else coords = vector3(coords.x, coords.y, coords.z + 1.0) end
     end
-
-
-    if data.offsetCoords then
-        local offset = data.offsetCoords
-        if type(offset) == "table" then
-            offset = vector3(offset.x or 0, offset.y or 0, offset.z or 0)
-        end
-        coords = coords + offset
-    end
-
 
     local model = GetEntityModel(entity)
     local distance = data.distance or 10
@@ -52,7 +37,6 @@ local function addInteractionEntity(data)
     local visible = true
     local debug = data.debug or false
     local debugColour = data.debugColour or { r = 128, g = 0, b = 128, a = 100 }
-
 
     local interactionID = Dui.createInteraction({
         distance = distance,
@@ -74,6 +58,7 @@ local function addInteractionEntity(data)
                 data.onEnter(self)
             end
         end,
+
 
         onExit = function(self)
             if data.onExit then

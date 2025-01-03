@@ -2,8 +2,7 @@
 
 --- Represents data for an individual interaction, including position, bind data, and callbacks.
 ---@class InteractionData
----@field coords Vec4 -- Position of the interaction or ped (contains x, y, z, and rotation).
----@field offsetCoords Vec3 -- Offset of the coords position (contains x, y, z.)
+---@field position Vec4 -- Position of the interaction or ped (contains x, y, z, and rotation).
 ---@field model string|nil -- Model identifier for the ped (only for addInteractionPed).
 ---@field pedID number|nil -- Unique ID for the ped (only for addInteractionPed).
 ---@field dataBind InteractionItemData[] -- Array of interaction items/actions available for the interaction.
@@ -14,7 +13,6 @@
 ---@field onExit fun(self: InteractionData): void|nil -- Function to execute when the player exits the interaction area.
 ---@field nearby fun(self: InteractionData): void|nil -- Function to execute when the player is near the interaction.
 ---@field debugColour {r: number, g: number, b: number, a: number}|nil -- Colour for debugging the interaction (RGBA format).
-
 InteractionData = {}
 
 --- Represents each item within an interaction, defining attributes for visual display and interaction logic.

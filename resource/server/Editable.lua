@@ -26,8 +26,6 @@ function Server.hasItem(target, itemName, count)
     return false
 end
 
-
-
 --- Adds a specified item to the player's inventory
 ---@param target number The player source ID
 ---@param itemName string The name of the item to add
